@@ -4,30 +4,43 @@ import { getToolComponent } from '@/lib/tools-registry';
 import ToolPageShell from '@/components/tool/ToolPageShell';
 import ComingSoonTool from '@/components/tool/ComingSoonTool';
 
-// Generate static params for all tools at build time
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://apexstudioutilities.com';
+
+// Pre-render every tool page at build time
 export async function generateStaticParams() {
   return TOOLS.map((tool) => ({ slug: tool.slug }));
 }
 
-// Per-tool SEO metadata
+// Rich per-tool SEO metadata
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const tool = getToolBySlug(slug);
   if (!tool) return { title: 'Tool Not Found' };
 
+  const url = `${BASE_URL}/tools/${slug}`;
+  const title = `${tool.name} — Free Online ${tool.tag} Tool`;
+
   return {
-    title: tool.name,
-    description: tool.description,
-    keywords: tool.keywords,
+    title:       tool.name,
+    description: tool.longDescription || tool.description,
+    keywords:    [...(tool.keywords ?? []), 'free online tool', 'browser tool', 'no signup', tool.tag.toLowerCase()],
+
+    alternates: { canonical: url },
+
     openGraph: {
-      title: `${tool.name} | Apex Studio Utilities`,
+      type:        'website',
+      url,
+      siteName:    'Apex Studio Utilities',
+      title,
       description: tool.description,
-      type: 'website',
+      images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: title }],
     },
+
     twitter: {
-      card: 'summary',
-      title: `${tool.name} | Apex Studio Utilities`,
+      card:        'summary_large_image',
+      title,
       description: tool.description,
+      images:      ['/opengraph-image'],
     },
   };
 }
@@ -35,18 +48,35 @@ export async function generateMetadata({ params }) {
 export default async function ToolPage({ params }) {
   const { slug } = await params;
   const tool = getToolBySlug(slug);
-
   if (!tool) notFound();
 
   const ToolComponent = getToolComponent(slug);
 
+  const jsonLd = {
+    '@context':   'https://schema.org',
+    '@type':      'SoftwareApplication',
+    name:          tool.name,
+    url:          `${BASE_URL}/tools/${slug}`,
+    description:   tool.longDescription || tool.description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem:     'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    featureList: tool.keywords?.join(', '),
+  };
+
   return (
-    <ToolPageShell tool={tool}>
-      {tool.status === 'live' && ToolComponent ? (
-        <ToolComponent />
-      ) : (
-        <ComingSoonTool name={tool.name} />
-      )}
-    </ToolPageShell>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ToolPageShell tool={tool}>
+        {tool.status === 'live' && ToolComponent ? (
+          <ToolComponent />
+        ) : (
+          <ComingSoonTool name={tool.name} />
+        )}
+      </ToolPageShell>
+    </>
   );
 }
