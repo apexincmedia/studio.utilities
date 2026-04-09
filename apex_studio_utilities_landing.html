@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apex Studio Utilities</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #08080D;
+    --surface:     #111116;
+    --card:        #17171E;
+    --card-hover:  #1E1E28;
+    --border:      #252530;
+    --border-hover:#3A3A4A;
+    --text:        #FFFFFF;
+    --muted:       #7A7A90;
+    --faint:       #3A3A4A;
+    --pill-bg:     #FFFFFF;
+    --pill-text:   #08080D;
+    --success:     #1A7A4A;
+    --success-bg:  #0D2B1E;
+    --error:       #A03030;
+    --error-bg:    #2B0D0D;
+    --warning:     #8A6A00;
+    --warning-bg:  #2B2200;
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --radius-lg:   20px;
+    --radius-pill: 999px;
+    --font:        'Comfortaa', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-weight: 700;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font); font-size: 18px; font-weight: 700;
+    color: var(--text); text-decoration: none;
+  }
+  .diamond {
+    width: 22px; height: 22px;
+    background: var(--text);
+    transform: rotate(45deg);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .logo-sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-family: var(--font); font-size: 11px;
+    font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 8px 16px; border-radius: var(--radius-pill);
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface); }
+  .nav-links a.active {
+    color: var(--pill-text); background: var(--pill-bg);
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 100px 40px 80px;
+    position: relative;
+  }
+  .hero > * {
+    animation: fadeUp 0.4s ease forwards;
+    opacity: 0;
+  }
+  .hero > *:nth-child(1) { animation-delay: 0s; }
+  .hero > *:nth-child(2) { animation-delay: 0.08s; }
+  .hero > *:nth-child(3) { animation-delay: 0.16s; }
+  .hero > *:nth-child(4) { animation-delay: 0.24s; }
+  .hero > *:nth-child(5) { animation-delay: 0.32s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 6px 16px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: var(--font); font-weight: 700;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .hero p {
+    font-size: 16px; color: var(--muted);
+    max-width: 480px; margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    max-width: 560px; margin: 0 auto 20px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 16px 56px 16px 24px;
+    font-family: var(--font); font-size: 14px; font-weight: 700;
+    color: var(--text); outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--border-hover); }
+  .search-btn {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: var(--pill-bg); color: var(--pill-text);
+    border: none; border-radius: var(--radius-pill);
+    padding: 8px 20px; cursor: pointer;
+    font-family: var(--font); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+  .search-btn:hover { opacity: 0.85; }
+
+  .hero-stats {
+    display: flex; align-items: center; justify-content: center; gap: 32px;
+    margin-top: 48px;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+  .stat-divider { width: 1px; height: 36px; background: var(--border); }
+
+  /* CATEGORIES SECTION */
+  section.cats {
+    padding: 0 40px 80px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* CATEGORY CARDS GRID */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .cat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    text-decoration: none; color: inherit;
+  }
+  .cat-card:hover {
+    background: var(--card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+  .cat-icon {
+    width: 40px; height: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
+  .cat-name {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    margin-bottom: 6px;
+  }
+  .cat-desc {
+    font-size: 12px; color: var(--muted); line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .cat-count {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  /* FEATURED ROW */
+  .featured-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-bottom: 12px;
+  }
+  .feat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    position: relative; overflow: hidden;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  }
+  .feat-card:hover { background: var(--card-hover); border-color: var(--border-hover); }
+  .feat-card.accent {
+    background: var(--text);
+    border-color: var(--text);
+  }
+  .feat-card.accent .feat-name,
+  .feat-card.accent .feat-sub { color: var(--bg); }
+  .feat-card.accent .feat-tag {
+    background: rgba(8,8,13,0.08);
+    color: var(--bg);
+    border-color: transparent;
+  }
+  .feat-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .feat-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .feat-tag {
+    display: inline-block; margin-bottom: 16px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--surface); color: var(--muted);
+    border-radius: var(--radius-pill); padding: 4px 12px;
+    border: 1px solid var(--border);
+  }
+
+  /* TOOLS STRIP */
+  .tools-strip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 60px;
+  }
+  .strip-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+  .tools-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .tool-pill {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-pill); padding: 7px 16px;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tool-pill:hover {
+    background: var(--card-hover); color: var(--text); border-color: var(--border-hover);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 40px;
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  footer .logo { margin-bottom: 12px; }
+  footer .footer-tag { font-size: 12px; color: var(--muted); }
+  .footer-col h4 {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+  .footer-col a {
+    display: block; font-size: 13px; color: var(--muted);
+    text-decoration: none; margin-bottom: 10px;
+    transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .footer-bottom p { font-size: 11px; color: var(--faint); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="diamond"></div>
+    Apex <span class="logo-sub">Studio Utilities</span>
+  </a>
+  <div class="nav-links">
+    <a href="#" class="active">Tools</a>
+    <a href="#">API</a>
+    <a href="#">Pricing</a>
+    <a href="#">Docs</a>
+    <a href="#">Blog</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Every tool. One place.</div>
+  <h1>The Premier Utility<br>Suite for Everything.</h1>
+  <p>Convert, compress, encode, decode, transform, and generate — no account required. Files never leave your device.</p>
+
+  <div class="search-wrap">
+    <input type="text" placeholder="Search 150+ tools — try 'PDF to PNG' or 'Base64'..." />
+    <button class="search-btn">Search</button>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">150+</div>
+      <div class="stat-label">Tools</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Free</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">Client-Side</div>
+      <div class="stat-label">Privacy First</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">No Signup</div>
+      <div class="stat-label">Ever</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<section class="cats">
+
+  <!-- FEATURED -->
+  <div class="section-label">Most Used</div>
+  <div class="featured-row" style="margin-bottom:12px;">
+    <div class="feat-card accent">
+      <div class="feat-tag">File Conversion</div>
+      <div class="feat-name">PDF to PNG</div>
+      <div class="feat-sub">Convert any PDF page-by-page into high-resolution PNG images. Client-side, instant, unlimited.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-tag">Media</div>
+      <div class="feat-name">YouTube to MP3</div>
+      <div class="feat-sub">Paste a link, download your audio. High-quality 320kbps extraction, no watermarks.</div>
+    </div>
+  </div>
+  <div class="featured-row" style="margin-bottom:40px;">
+    <div class="feat-card">
+      <div class="feat-tag">Image Tools</div>
+      <div class="feat-name">Background Remover</div>
+      <div class="feat-sub">AI-powered background removal. Upload any image and get a transparent PNG in seconds.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-tag">Developer</div>
+      <div class="feat-name">JSON Formatter</div>
+      <div class="feat-sub">Beautify, minify, and validate JSON in one click. With syntax highlighting and error detection.</div>
+    </div>
+  </div>
+
+  <!-- ALL CATEGORIES -->
+  <div class="section-label">All Categories</div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-icon">📄</div>
+      <div class="cat-name">File Conversion</div>
+      <div class="cat-desc">PDF, Word, Excel, PowerPoint — convert between any format in both directions.</div>
+      <div class="cat-count">28 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🖼</div>
+      <div class="cat-name">Image Tools</div>
+      <div class="cat-desc">Compress, resize, crop, upscale, remove backgrounds, and convert image formats.</div>
+      <div class="cat-count">22 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🎬</div>
+      <div class="cat-name">Media & Downloaders</div>
+      <div class="cat-desc">YouTube, TikTok, Instagram, Twitter. MP3, MP4, GIF — any format, any platform.</div>
+      <div class="cat-count">14 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">⌨️</div>
+      <div class="cat-name">Developer Tools</div>
+      <div class="cat-desc">JSON, YAML, XML, regex, UUID, hash generators, minifiers, and code formatters.</div>
+      <div class="cat-count">30 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">💡</div>
+      <div class="cat-name">Text Tools</div>
+      <div class="cat-desc">Case converters, character counters, slug generators, text diffing, and cleaners.</div>
+      <div class="cat-count">18 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🔐</div>
+      <div class="cat-name">Encoding & Decoding</div>
+      <div class="cat-desc">Base64, URL encode, JWT, QR codes, barcodes, binary, hex, Morse, and more.</div>
+      <div class="cat-count">16 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🧮</div>
+      <div class="cat-name">Calculators</div>
+      <div class="cat-desc">Unit conversions, currency, percentages, timestamps, BMI, mortgage, compound interest.</div>
+      <div class="cat-count">20 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🛡</div>
+      <div class="cat-name">Security & Network</div>
+      <div class="cat-desc">Password generator, SSL checker, WHOIS, DNS lookup, IP geo, and HTTP headers.</div>
+      <div class="cat-count">12 tools</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🔍</div>
+      <div class="cat-name">SEO & Web</div>
+      <div class="cat-desc">Meta tags, Open Graph, robots.txt, sitemap generator, UTM builder, and keyword tools.</div>
+      <div class="cat-count">10 tools</div>
+    </div>
+  </div>
+
+  <!-- QUICK ACCESS PILLS -->
+  <div class="tools-strip" style="margin-top:40px;">
+    <div class="strip-label">Quick Access</div>
+    <div class="tools-list">
+      <div class="tool-pill">PDF to Word</div>
+      <div class="tool-pill">Image Compressor</div>
+      <div class="tool-pill">PNG to Base64</div>
+      <div class="tool-pill">URL Encoder</div>
+      <div class="tool-pill">QR Generator</div>
+      <div class="tool-pill">SHA-256 Hash</div>
+      <div class="tool-pill">Timestamp Converter</div>
+      <div class="tool-pill">Word Counter</div>
+      <div class="tool-pill">Color Picker</div>
+      <div class="tool-pill">YAML to JSON</div>
+      <div class="tool-pill">SVG to PNG</div>
+      <div class="tool-pill">Regex Tester</div>
+      <div class="tool-pill">JWT Decoder</div>
+      <div class="tool-pill">HEIC to JPG</div>
+      <div class="tool-pill">IP Lookup</div>
+      <div class="tool-pill">Cron Builder</div>
+      <div class="tool-pill">UUID Generator</div>
+      <div class="tool-pill">OCR Tool</div>
+      <div class="tool-pill">MP4 to GIF</div>
+      <div class="tool-pill">Password Generator</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="logo">
+      <div class="diamond"></div>
+    </div>
+    <div class="footer-tag">Studio Utilities</div>
+  </div>
+  <div class="footer-col">
+    <h4>Tools</h4>
+    <a href="#">File Conversion</a>
+    <a href="#">Image Tools</a>
+    <a href="#">Media</a>
+    <a href="#">Developer</a>
+    <a href="#">Text Tools</a>
+  </div>
+  <div class="footer-col">
+    <h4>Developers</h4>
+    <a href="#">API Docs</a>
+    <a href="#">Changelog</a>
+    <a href="#">Status</a>
+    <a href="#">Open Source</a>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <a href="#">About Apex</a>
+    <a href="#">Blog</a>
+    <a href="#">Careers</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-col">
+    <h4>Follow</h4>
+    <a href="#">Instagram</a>
+    <a href="#">Twitter / X</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">GitHub</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 Apex. All rights reserved.</p>
+  <p>Privacy · Terms · Cookies</p>
+</div>
+
+</body>
+</html>
