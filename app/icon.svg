@@ -1,5 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#08080D"/>
-  <polygon points="16,3 29,16 16,29 3,16" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round"/>
-  <polygon points="16,8 24,16 16,24 8,16" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <!-- Dark background -->
+  <rect width="500" height="500" rx="80" fill="#08080D"/>
+
+  <!--
+    Apex brandmark — 4 circles at compass points + 4 diamonds (rotated squares)
+    Each diamond corner touches the edge of the adjacent circle exactly.
+    r = 103.55  |  half-diagonal = r√2 = 146.45
+    Circle centers: W(103.55,250) N(250,103.55) E(396.45,250) S(250,396.45)
+    Diamond centers (midpoints between adjacent circles):
+      NW(176.775,176.775)  NE(323.225,176.775)
+      SE(323.225,323.225)  SW(176.775,323.225)
+  -->
+
+  <!-- 4 corner diamonds (rotated squares) -->
+  <polygon points="176.775,30.325 323.225,176.775 176.775,323.225 30.325,176.775"   fill="white"/>
+  <polygon points="323.225,30.325 469.675,176.775 323.225,323.225 176.775,176.775"  fill="white"/>
+  <polygon points="323.225,176.775 469.675,323.225 323.225,469.675 176.775,323.225" fill="white"/>
+  <polygon points="176.775,176.775 323.225,323.225 176.775,469.675 30.325,323.225"  fill="white"/>
+
+  <!-- 4 circles at compass points (drawn on top for clean overlap) -->
+  <circle cx="103.55" cy="250"    r="103.55" fill="white"/>
+  <circle cx="250"    cy="103.55" r="103.55" fill="white"/>
+  <circle cx="396.45" cy="250"    r="103.55" fill="white"/>
+  <circle cx="250"    cy="396.45" r="103.55" fill="white"/>
 </svg>

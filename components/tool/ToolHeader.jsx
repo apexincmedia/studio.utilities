@@ -4,22 +4,19 @@ import TrustBadges from '@/components/tool/TrustBadges';
 
 /**
  * ToolHeader — centered tool page hero with icon, category tag, title,
- * description, and trust badges. Consistent with original centered layout.
- *
- * Props:
- *   tool:  full tool object from tools-catalog
+ * description, and trust badges.
  */
 export default function ToolHeader({ tool }) {
   const icon = ICON_MAP[tool.iconName] ?? ICON_MAP.Zap;
 
   return (
     <header className="tool-header">
-      {/* Icon */}
+      {/* Icon — elevated with glow */}
       <div className="tool-header-icon">
         <Icon icon={icon} size={28} />
       </div>
 
-      {/* Category tag */}
+      {/* Category tag + breadcrumb-style label */}
       <div className="tool-header-meta">
         <span className="tag">{tool.tag}</span>
       </div>
@@ -27,8 +24,10 @@ export default function ToolHeader({ tool }) {
       {/* Title */}
       <h1 className="tool-header-title">{tool.name}</h1>
 
-      {/* Description */}
-      <p className="tool-header-desc">{tool.description}</p>
+      {/* Long description when available, fallback to short */}
+      <p className="tool-header-desc">
+        {tool.longDescription || tool.description}
+      </p>
 
       {/* Trust badges */}
       <TrustBadges />

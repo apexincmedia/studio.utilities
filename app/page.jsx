@@ -4,62 +4,43 @@ import { getFeaturedTools, TOOLS } from '@/lib/tools-catalog';
 import { ICON_MAP } from '@/lib/icons';
 import Icon from '@/components/ui/Icon';
 import SectionLabel from '@/components/ui/SectionLabel';
-import StatBlock, { StatRow } from '@/components/ui/StatBlock';
 import HeroSearchClient from '@/components/ui/HeroSearchClient';
 
 const QUICK_ACCESS_SLUGS = [
-  'pdf-to-word',
-  'image-compressor',
-  'png-to-base64',
-  'url-encoder',
-  'qr-code-generator',
-  'hash-generator',
-  'timestamp-converter',
-  'word-counter',
-  'image-color-picker',
-  'yaml-to-json',
-  'svg-to-png',
-  'regex-tester',
-  'jwt-decoder',
-  'heic-to-jpg',
-  'ip-lookup',
-  'cron-builder',
-  'uuid-generator',
-  'ocr-tool',
-  'mp4-to-gif',
-  'password-generator',
+  'pdf-to-word', 'image-compressor', 'png-to-base64', 'url-encoder',
+  'qr-code-generator', 'hash-generator', 'timestamp-converter', 'word-counter',
+  'image-color-picker', 'yaml-to-json', 'svg-to-png', 'regex-tester',
+  'jwt-decoder', 'heic-to-jpg', 'ip-lookup', 'cron-builder',
+  'uuid-generator', 'ocr-tool', 'mp4-to-gif', 'password-generator',
 ];
 
 const HOW_IT_WORKS = [
-  {
-    iconName: 'Upload',
-    title: 'Upload or Paste',
-    desc: 'Drag & drop a file, paste text, or enter a URL.',
-  },
-  {
-    iconName: 'Zap',
-    title: 'We Process It',
-    desc: 'Runs entirely in your browser. Nothing leaves your device.',
-  },
-  {
-    iconName: 'Download',
-    title: 'Download Instantly',
-    desc: 'Get your converted or transformed file in seconds.',
-  },
+  { iconName: 'Upload',   title: 'Upload or Paste', desc: 'Drag & drop, paste text, or enter a URL.' },
+  { iconName: 'Cpu',      title: 'Processed Locally', desc: 'Runs in your browser — nothing leaves your device.' },
+  { iconName: 'Download', title: 'Download Instantly', desc: 'Your file in seconds. No waiting, no queues.' },
 ];
 
-const TRUSTED_BY = ['Developers', 'Designers', 'Teams', 'Students', 'Creators'];
+const DIFFERENTIATORS = [
+  { label: 'No upload limits',  icon: 'Maximize2' },
+  { label: 'No watermarks',     icon: 'Eye' },
+  { label: 'No rate limits',    icon: 'Zap' },
+  { label: 'No account needed', icon: 'Lock' },
+  { label: 'No server uploads', icon: 'ShieldCheck' },
+  { label: 'No ads',            icon: 'Check' },
+];
 
 export default function HomePage() {
-  const featured = getFeaturedTools().slice(0, 4);
+  const featured  = getFeaturedTools().slice(0, 4);
+  const liveCount = TOOLS.filter((t) => t.status === 'live').length;
 
   return (
     <>
-      {/* HERO */}
+      {/* ── HERO ─────────────────────────────────────────────────── */}
       <div className="hero hero-animate">
+
         <div className="hero-tag">Every tool. One place.</div>
 
-        <h1>
+        <h1 style={{ letterSpacing: '-0.03em' }}>
           The Premier Utility<br />Suite for Everything.
         </h1>
 
@@ -70,31 +51,48 @@ export default function HomePage() {
 
         <HeroSearchClient />
 
-        <StatRow>
-          <StatBlock value={`${TOOLS.length}+`} label="Tools" />
-          <StatBlock value="100%" label="Free" />
-          <StatBlock value="Client-Side" label="Privacy First" />
-          <StatBlock value="No Signup" label="Ever" />
-        </StatRow>
+        {/* Stats — large dramatic numbers */}
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <span className="hero-stat-num">{liveCount}+</span>
+            <span className="hero-stat-label">Free tools</span>
+          </div>
+          <div className="hero-stat-divider" />
+          <div className="hero-stat">
+            <span className="hero-stat-num">100%</span>
+            <span className="hero-stat-label">Client-side</span>
+          </div>
+          <div className="hero-stat-divider" />
+          <div className="hero-stat">
+            <span className="hero-stat-num">0</span>
+            <span className="hero-stat-label">Accounts needed</span>
+          </div>
+          <div className="hero-stat-divider" />
+          <div className="hero-stat">
+            <span className="hero-stat-num">∞</span>
+            <span className="hero-stat-label">No limits</span>
+          </div>
+        </div>
+      </div>
 
-        {/* Trusted-by strip */}
-        <div className="trusted-strip">
-          <span className="trusted-label">Used by</span>
-          {TRUSTED_BY.map((item, i) => (
-            <span key={item} style={{ display: 'contents' }}>
-              {i > 0 && <span className="trusted-sep" />}
-              <span className="trusted-item">{item}</span>
-            </span>
+      {/* ── "BUILT DIFFERENT" DIFFERENTIATOR STRIP ───────────────── */}
+      <div className="diff-strip">
+        <div className="diff-strip-inner">
+          {DIFFERENTIATORS.map(({ label, icon }) => (
+            <div key={label} className="diff-item">
+              <Icon icon={ICON_MAP[icon]} size={13} />
+              <span>{label}</span>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
-      <section style={{ padding: '0 40px 80px', maxWidth: 1200, margin: '0 auto' }}>
+      {/* ── MAIN CONTENT ─────────────────────────────────────────── */}
+      <section className="landing-section" style={{ padding: '0 40px 80px', maxWidth: 1200, margin: '0 auto' }}>
 
         {/* HOW IT WORKS */}
         <SectionLabel>How It Works</SectionLabel>
-        <div className="how-it-works" style={{ marginBottom: 56 }}>
+        <div className="how-it-works" style={{ marginBottom: 64 }}>
           {HOW_IT_WORKS.map((step, i) => (
             <>
               <div key={step.title} className="how-step">
@@ -122,9 +120,8 @@ export default function HomePage() {
             <FeaturedCard tool={featured[1]} />
           </div>
         )}
-
         {featured.length >= 4 && (
-          <div className="featured-row" style={{ marginBottom: 40 }}>
+          <div className="featured-row" style={{ marginBottom: 48 }}>
             <FeaturedCard tool={featured[2]} />
             <FeaturedCard tool={featured[3]} />
           </div>
@@ -132,7 +129,7 @@ export default function HomePage() {
 
         {/* ALL CATEGORIES */}
         <SectionLabel>All Categories</SectionLabel>
-        <div className="cat-grid" style={{ marginBottom: 40 }}>
+        <div className="cat-grid" style={{ marginBottom: 48 }}>
           {CATEGORIES.map((cat) => (
             <Link key={cat.id} href={`/tools?cat=${cat.id}`} className="cat-card">
               <div className="cat-card-icon">

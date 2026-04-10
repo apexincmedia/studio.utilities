@@ -4,12 +4,12 @@ const FOOTER_COLS = [
   {
     heading: 'Tools',
     links: [
-      { label: 'File Conversion',   href: '/tools?cat=file-conversion' },
-      { label: 'Image Tools',       href: '/tools?cat=image-tools' },
-      { label: 'Developer Tools',   href: '/tools?cat=developer' },
-      { label: 'Text Tools',        href: '/tools?cat=text-tools' },
-      { label: 'Calculators',       href: '/tools?cat=calculators' },
-      { label: 'Security & Network',href: '/tools?cat=security' },
+      { label: 'File Conversion',    href: '/tools?cat=file-conversion' },
+      { label: 'Image Tools',        href: '/tools?cat=image-tools' },
+      { label: 'Developer Tools',    href: '/tools?cat=developer' },
+      { label: 'Text Tools',         href: '/tools?cat=text-tools' },
+      { label: 'Calculators',        href: '/tools?cat=calculators' },
+      { label: 'Security & Network', href: '/tools?cat=security' },
     ],
   },
   {
@@ -22,21 +22,20 @@ const FOOTER_COLS = [
     ],
   },
   {
-    heading: 'Company',
+    heading: 'Product',
     links: [
+      { label: 'Docs',    href: '/docs' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'API',     href: '/api-docs' },
       { label: 'About',   href: '/about' },
       { label: 'Contact', href: '/contact' },
-      { label: 'Privacy', href: '/privacy' },
-      { label: 'Terms',   href: '/terms' },
     ],
   },
   {
-    heading: 'Follow',
+    heading: 'Legal',
     links: [
-      { label: 'Instagram',   href: 'https://instagram.com',  external: true },
-      { label: 'Twitter / X', href: 'https://twitter.com',    external: true },
-      { label: 'LinkedIn',    href: 'https://linkedin.com',   external: true },
-      { label: 'GitHub',      href: 'https://github.com',     external: true },
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
     ],
   },
 ];
@@ -48,10 +47,15 @@ export default function Footer() {
         {/* Brand column */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
-              <polygon points="16,3 29,16 16,29 3,16" fill="none" stroke="white" strokeWidth="2" strokeLinejoin="round" />
-              <polygon points="16,8 24,16 16,24 8,16" fill="white" />
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/apex-brandmark-white.png"
+              alt=""
+              width={18}
+              height={18}
+              aria-hidden="true"
+              style={{ flexShrink: 0, objectFit: 'contain' }}
+            />
             <span style={{ fontFamily: 'var(--font)', fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>
               Apex Studio Utilities
             </span>

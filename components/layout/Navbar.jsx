@@ -2,24 +2,77 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { ICON_MAP } from '@/lib/icons';
-import Icon from '@/components/ui/Icon';
+import { useEffect, useState } from 'react';
 
 const NAV_LINKS = [
   { label: 'Tools',   href: '/tools' },
-  { label: 'API',     href: '/api-docs' },
-  { label: 'Pricing', href: '/pricing' },
   { label: 'Docs',    href: '/docs' },
-  { label: 'Blog',    href: '/blog' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'API',     href: '/api-docs' },
 ];
+
+/* ── Apex Brandmark logo (white PNG) ─────────────────────────── */
+function ApexMark({ size = 22 }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/apex-brandmark-white.png"
+      alt=""
+      width={size}
+      height={size}
+      aria-hidden="true"
+      style={{ flexShrink: 0, objectFit: 'contain', display: 'block' }}
+    />
+  );
+}
+
+/* ── Animated hamburger — 3 pill bars morph to X ─────────────── */
+function HamburgerBars({ open }) {
+  const t = 'transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease';
+  // Each bar: center of viewBox is (12,12). Top bar center-y=5.25, bottom center-y=18.75
+  // Offset to center: 12-5.25=6.75, 12-18.75=-6.75
+  const topStyle = {
+    transition: t,
+    transformOrigin: 'center',
+    transform: open ? 'translateY(6.75px) rotate(45deg)' : 'translateY(0) rotate(0deg)',
+  };
+  const midStyle = {
+    transition: t,
+    transformOrigin: 'center',
+    opacity: open ? 0 : 1,
+    transform: open ? 'scaleX(0)' : 'scaleX(1)',
+  };
+  const botStyle = {
+    transition: t,
+    transformOrigin: 'center',
+    transform: open ? 'translateY(-6.75px) rotate(-45deg)' : 'translateY(0) rotate(0deg)',
+  };
+
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ display: 'block', flexShrink: 0 }}
+    >
+      {/* Top bar */}
+      <rect x="3" y="3.5" width="18" height="3.5" rx="1.75" style={topStyle} />
+      {/* Middle bar */}
+      <rect x="3" y="10.25" width="18" height="3.5" rx="1.75" style={midStyle} />
+      {/* Bottom bar */}
+      <rect x="3" y="17" width="18" height="3.5" rx="1.75" style={botStyle} />
+    </svg>
+  );
+}
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled,  setScrolled]  = useState(false);
+  const [menuOpen,  setMenuOpen]  = useState(false);
 
-  // Close overlay when route changes
+  // Close overlay on route change
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   // Scroll-triggered border glow
@@ -43,27 +96,10 @@ export default function Navbar() {
   return (
     <>
       <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
+        {/* Wordmark */}
         <Link href="/" className="navbar-logo">
-          {/* Inline SVG diamond mark */}
-          <svg
-            className="logo-diamond"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="3"
-              y="3"
-              width="16"
-              height="16"
-              rx="3"
-              fill="white"
-              transform="rotate(45 11 11)"
-            />
-          </svg>
-          Apex Studio Utilities
+          <ApexMark size={22} />
+          <span className="navbar-logo-text">Apex Studio Utilities</span>
         </Link>
 
         {/* Desktop nav links */}
@@ -86,33 +122,16 @@ export default function Navbar() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <Icon icon={menuOpen ? ICON_MAP.X : ICON_MAP.Menu} size={20} />
+          <HamburgerBars open={menuOpen} />
         </button>
       </nav>
 
-      {/* Full-screen mobile nav overlay */}
+      {/* Full-screen mobile nav overlay — fades + slides in */}
       <div className={`nav-overlay${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
         <div className="nav-overlay-header">
           <Link href="/" className="navbar-logo" onClick={() => setMenuOpen(false)}>
-            <svg
-              className="logo-diamond"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              aria-hidden="true"
-            >
-              <rect
-                x="3"
-                y="3"
-                width="16"
-                height="16"
-                rx="3"
-                fill="white"
-                transform="rotate(45 11 11)"
-              />
-            </svg>
-            Apex Studio Utilities
+            <ApexMark size={22} />
+            <span className="navbar-logo-text">Apex Studio Utilities</span>
           </Link>
 
           <button
@@ -120,7 +139,7 @@ export default function Navbar() {
             aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
           >
-            <Icon icon={ICON_MAP.X} size={20} />
+            <HamburgerBars open={menuOpen} />
           </button>
         </div>
 
@@ -136,6 +155,14 @@ export default function Navbar() {
             </Link>
           ))}
         </nav>
+
+        {/* Mobile overlay footer CTA */}
+        <div className="nav-overlay-footer">
+          <Link href="/tools" className="btn-primary" onClick={() => setMenuOpen(false)}>
+            Browse All 170+ Tools
+          </Link>
+          <p className="nav-overlay-note">100% free · No account · Client-side only</p>
+        </div>
       </div>
     </>
   );
