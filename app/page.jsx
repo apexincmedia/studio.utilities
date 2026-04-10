@@ -5,6 +5,7 @@ import { ICON_MAP } from '@/lib/icons';
 import Icon from '@/components/ui/Icon';
 import SectionLabel from '@/components/ui/SectionLabel';
 import HeroSearchClient from '@/components/ui/HeroSearchClient';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const QUICK_ACCESS_SLUGS = [
   'pdf-to-word', 'image-compressor', 'png-to-base64', 'url-encoder',
@@ -20,14 +21,7 @@ const HOW_IT_WORKS = [
   { iconName: 'Download', title: 'Download Instantly', desc: 'Your file in seconds. No waiting, no queues.' },
 ];
 
-const DIFFERENTIATORS = [
-  { label: 'No upload limits',  icon: 'Maximize2' },
-  { label: 'No watermarks',     icon: 'Eye' },
-  { label: 'No rate limits',    icon: 'Zap' },
-  { label: 'No account needed', icon: 'Lock' },
-  { label: 'No server uploads', icon: 'ShieldCheck' },
-  { label: 'No ads',            icon: 'Check' },
-];
+const TRUSTED_BY = ['Developers', 'Designers', 'Teams', 'Students', 'Creators', 'Freelancers'];
 
 export default function HomePage() {
   const featured  = getFeaturedTools().slice(0, 4);
@@ -75,88 +69,101 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ── "BUILT DIFFERENT" DIFFERENTIATOR STRIP ───────────────── */}
-      <div className="diff-strip">
-        <div className="diff-strip-inner">
-          {DIFFERENTIATORS.map(({ label, icon }) => (
-            <div key={label} className="diff-item">
-              <Icon icon={ICON_MAP[icon]} size={13} />
-              <span>{label}</span>
-            </div>
-          ))}
-        </div>
+      {/* ── TRUSTED-BY STRIP ─────────────────────────────────────── */}
+      <div className="trusted-strip">
+        <span className="trusted-label">Used by</span>
+        {TRUSTED_BY.map((item, i) => (
+          <>
+            <span key={item} className="trusted-item">{item}</span>
+            {i < TRUSTED_BY.length - 1 && <span key={`sep-${i}`} className="trusted-sep" />}
+          </>
+        ))}
       </div>
 
       {/* ── MAIN CONTENT ─────────────────────────────────────────── */}
       <section className="landing-section" style={{ padding: '0 40px 80px', maxWidth: 1200, margin: '0 auto' }}>
 
         {/* HOW IT WORKS */}
-        <SectionLabel>How It Works</SectionLabel>
-        <div className="how-it-works" style={{ marginBottom: 64 }}>
-          {HOW_IT_WORKS.map((step, i) => (
-            <>
-              <div key={step.title} className="how-step">
-                <div className="how-step-icon">
-                  <Icon icon={ICON_MAP[step.iconName]} size={22} />
+        <ScrollReveal>
+          <SectionLabel>How It Works</SectionLabel>
+          <div className="how-it-works" style={{ marginBottom: 64 }}>
+            {HOW_IT_WORKS.map((step, i) => (
+              <>
+                <div key={step.title} className="how-step">
+                  <div className="how-step-icon">
+                    <Icon icon={ICON_MAP[step.iconName]} size={22} />
+                  </div>
+                  <div className="how-step-title">{step.title}</div>
+                  <div className="how-step-desc">{step.desc}</div>
                 </div>
-                <div className="how-step-title">{step.title}</div>
-                <div className="how-step-desc">{step.desc}</div>
-              </div>
-              {i < HOW_IT_WORKS.length - 1 && (
-                <div key={`arrow-${i}`} className="how-arrow">
-                  <Icon icon={ICON_MAP.ChevronRight} size={20} />
-                </div>
-              )}
-            </>
-          ))}
-        </div>
+                {i < HOW_IT_WORKS.length - 1 && (
+                  <div key={`arrow-${i}`} className="how-arrow">
+                    <Icon icon={ICON_MAP.ChevronRight} size={20} />
+                  </div>
+                )}
+              </>
+            ))}
+          </div>
+        </ScrollReveal>
 
         {/* FEATURED */}
-        <SectionLabel>Most Used</SectionLabel>
+        <ScrollReveal delay={80}>
+          <SectionLabel>Most Used</SectionLabel>
+        </ScrollReveal>
 
         {featured.length >= 2 && (
-          <div className="featured-row" style={{ marginBottom: 12 }}>
-            <FeaturedCard tool={featured[0]} accent />
-            <FeaturedCard tool={featured[1]} />
-          </div>
+          <ScrollReveal delay={120}>
+            <div className="featured-row" style={{ marginBottom: 12 }}>
+              <FeaturedCard tool={featured[0]} accent />
+              <FeaturedCard tool={featured[1]} />
+            </div>
+          </ScrollReveal>
         )}
         {featured.length >= 4 && (
-          <div className="featured-row" style={{ marginBottom: 48 }}>
-            <FeaturedCard tool={featured[2]} />
-            <FeaturedCard tool={featured[3]} />
-          </div>
+          <ScrollReveal delay={160}>
+            <div className="featured-row" style={{ marginBottom: 48 }}>
+              <FeaturedCard tool={featured[2]} />
+              <FeaturedCard tool={featured[3]} />
+            </div>
+          </ScrollReveal>
         )}
 
         {/* ALL CATEGORIES */}
-        <SectionLabel>All Categories</SectionLabel>
-        <div className="cat-grid" style={{ marginBottom: 48 }}>
-          {CATEGORIES.map((cat) => (
-            <Link key={cat.id} href={`/tools?cat=${cat.id}`} className="cat-card">
-              <div className="cat-card-icon">
-                <Icon icon={ICON_MAP[cat.iconName]} size={28} />
-              </div>
-              <div className="cat-name">{cat.name}</div>
-              <div className="cat-desc">{cat.description}</div>
-              <div className="cat-count">{cat.count} tools</div>
-            </Link>
-          ))}
-        </div>
+        <ScrollReveal delay={80}>
+          <SectionLabel>All Categories</SectionLabel>
+        </ScrollReveal>
+        <ScrollReveal delay={120}>
+          <div className="cat-grid" style={{ marginBottom: 48 }}>
+            {CATEGORIES.map((cat) => (
+              <Link key={cat.id} href={`/tools?cat=${cat.id}`} className="cat-card">
+                <div className="cat-card-icon">
+                  <Icon icon={ICON_MAP[cat.iconName]} size={28} />
+                </div>
+                <div className="cat-name">{cat.name}</div>
+                <div className="cat-desc">{cat.description}</div>
+                <div className="cat-count">{cat.count} tools</div>
+              </Link>
+            ))}
+          </div>
+        </ScrollReveal>
 
         {/* QUICK ACCESS STRIP */}
-        <div className="tools-strip">
-          <div className="strip-label">Quick Access</div>
-          <div className="tools-list">
-            {QUICK_ACCESS_SLUGS.map((slug) => {
-              const tool = TOOLS.find((t) => t.slug === slug);
-              if (!tool) return null;
-              return (
-                <Link key={slug} href={`/tools/${slug}`} className="tool-pill">
-                  {tool.name}
-                </Link>
-              );
-            })}
+        <ScrollReveal delay={80}>
+          <div className="tools-strip">
+            <div className="strip-label">Quick Access</div>
+            <div className="tools-list">
+              {QUICK_ACCESS_SLUGS.map((slug) => {
+                const tool = TOOLS.find((t) => t.slug === slug);
+                if (!tool) return null;
+                return (
+                  <Link key={slug} href={`/tools/${slug}`} className="tool-pill">
+                    {tool.name}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
       </section>
     </>
