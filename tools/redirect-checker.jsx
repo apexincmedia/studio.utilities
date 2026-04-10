@@ -178,7 +178,7 @@ export default function RedirectChecker() {
 
       <OptionsPanel>
         <div className="privacy-note" style={{ marginBottom: 16 }}>
-          `corsproxy.io` may collapse intermediate hops, so this tool shows the final destination and a simplified chain when full headers are unavailable.
+          The internal `/api/proxy` route may still collapse intermediate hops, so this tool shows the final destination and a simplified chain when full headers are unavailable.
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>

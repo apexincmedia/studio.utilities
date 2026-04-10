@@ -272,7 +272,7 @@ export default function LinkExtractor() {
       }}
       privacyNote={
         mode === 'url'
-          ? 'Uses corsproxy.io to fetch public HTML before extracting links locally'
+          ? 'Uses the internal /api/proxy route to fetch public HTML before extracting links locally'
           : 'Parsing happens locally in your browser'
       }
     />

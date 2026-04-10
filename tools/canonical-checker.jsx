@@ -200,7 +200,7 @@ export default function CanonicalChecker() {
 
       <OptionsPanel>
         <div className="privacy-note" style={{ marginBottom: 16 }}>
-          Uses `corsproxy.io` to fetch public HTML and headers before analyzing the canonical signals locally.
+          Uses the internal `/api/proxy` route to fetch public HTML and headers before analyzing the canonical signals locally.
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>

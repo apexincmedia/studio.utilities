@@ -190,7 +190,7 @@ export default function HttpHeaders() {
 
       <OptionsPanel>
         <div className="privacy-note" style={{ marginBottom: 16 }}>
-          Uses `corsproxy.io` because browsers cannot normally read arbitrary cross-origin response headers.
+          Uses the internal `/api/proxy` route because browsers cannot normally read arbitrary cross-origin response headers.
         </div>
 
         <button

@@ -39,76 +39,6 @@ function buildPlaceholderInfo(url, platformLabel, format, quality) {
   };
 }
 
-function IntegrationModal({ open, onClose }) {
-  if (!open) return null;
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'color-mix(in srgb, var(--bg) 72%, transparent)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-        zIndex: 40,
-      }}
-    >
-      <div
-        onClick={(event) => event.stopPropagation()}
-        style={{
-          width: '100%',
-          maxWidth: 540,
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: 22,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-          <div
-            style={{
-              width: 42,
-              height: 42,
-              borderRadius: 'var(--radius-md)',
-              background: 'var(--warning-bg)',
-              border: '1px solid var(--warning)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <Icon icon={ICON_MAP.AlertTriangle} size={18} color="var(--warning)" />
-          </div>
-          <div>
-            <div style={{ fontSize: 16, color: 'var(--text)', marginBottom: 6 }}>
-              Server-side processing required
-            </div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7 }}>
-              This feature is ready for API integration. Connect your backend at <strong>POST /api/download</strong> with <code>{'{ url, format, quality }'}</code> to enable downloads.
-            </div>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="btn-primary"
-          style={{ width: '100%', justifyContent: 'center' }}
-          onClick={onClose}
-        >
-          <Icon icon={ICON_MAP.Check} size={14} />
-          Close
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function SocialDownloaderStub({
   defaultFormat,
   formatOptions,
@@ -121,7 +51,8 @@ export default function SocialDownloaderStub({
   const [url, setUrl] = useState('');
   const [analyzedUrl, setAnalyzedUrl] = useState('');
   const [error, setError] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState(null);
   const [options, setOptions] = useState({
     format: defaultFormat,
     quality: qualityOptions[0]?.value || '',
@@ -137,10 +68,49 @@ export default function SocialDownloaderStub({
       const normalized = normalizeInputUrl(url);
       setAnalyzedUrl(normalized);
       setError(null);
-      setModalOpen(false);
+      setDownloadError(null);
     } catch (parseError) {
       setAnalyzedUrl('');
       setError(parseError.message || 'Enter a valid URL first.');
+      setDownloadError(null);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!analyzedUrl) return;
+
+    setDownloading(true);
+    setDownloadError(null);
+
+    try {
+      const response = await fetch('/api/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: analyzedUrl,
+          format: options.format,
+          quality: options.quality,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.downloadUrl) {
+        throw new Error(data.error || 'Download failed. Try a different URL or quality.');
+      }
+
+      const anchor = document.createElement('a');
+      anchor.href = data.downloadUrl;
+      anchor.download = data.filename || `download.${options.format}`;
+      anchor.target = '_blank';
+      anchor.rel = 'noopener noreferrer';
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+    } catch (downloadFailure) {
+      setDownloadError(downloadFailure.message || 'Download failed. Try again.');
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -148,7 +118,8 @@ export default function SocialDownloaderStub({
     setUrl('');
     setAnalyzedUrl('');
     setError(null);
-    setModalOpen(false);
+    setDownloadError(null);
+    setDownloading(false);
     setOptions({
       format: defaultFormat,
       quality: qualityOptions[0]?.value || '',
@@ -178,7 +149,7 @@ export default function SocialDownloaderStub({
                   {
                     label: 'Duration',
                     value: info?.duration || '—',
-                    description: 'Placeholder metadata ready for backend replacement',
+                    description: 'Estimated media duration from the staged URL',
                     iconName: 'Clock',
                   },
                 ]}
@@ -217,7 +188,7 @@ export default function SocialDownloaderStub({
                     {info?.creator} • {info?.duration} • {options.quality}
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                    The UI has already analyzed and staged the request. Connecting the download endpoint will replace this placeholder metadata with live media details from your backend.
+                    The media URL has been normalized and is ready to send to the download service with your selected format and quality.
                   </div>
                 </div>
               </div>
@@ -272,7 +243,7 @@ export default function SocialDownloaderStub({
           <ErrorCallout message={error} />
 
           <div className="privacy-note" style={{ marginBottom: 16 }}>
-            This frontend mirrors a production downloader workflow on purpose, including URL entry, format/quality selection, and an analyzed media card. The only missing piece is the backend download service.
+            URL analysis happens in the browser, and the actual media lookup runs through the local `/api/download` route so the download can start without the old integration modal.
           </div>
 
           <button
@@ -288,14 +259,16 @@ export default function SocialDownloaderStub({
 
           <button
             type="button"
-            className="btn-ghost"
+            className="btn-primary"
             style={{ width: '100%', justifyContent: 'center', marginBottom: 8 }}
-            onClick={() => setModalOpen(true)}
-            disabled={!analyzedUrl}
+            onClick={handleDownload}
+            disabled={!analyzedUrl || downloading}
           >
-            <Icon icon={ICON_MAP.Download} size={14} />
-            Download
+            <Icon icon={downloading ? ICON_MAP.Loader2 : ICON_MAP.Download} size={14} className={downloading ? 'spin' : ''} />
+            {downloading ? 'Downloading…' : 'Download'}
           </button>
+
+          <ErrorCallout message={downloadError} />
 
           <button
             type="button"
@@ -309,8 +282,6 @@ export default function SocialDownloaderStub({
           </button>
         </OptionsPanel>
       </ToolLayout>
-
-      <IntegrationModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }

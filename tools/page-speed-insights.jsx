@@ -60,6 +60,7 @@ function getAuditValue(audits, key) {
 
 export default function PageSpeedInsights() {
   const [url, setUrl] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [strategy, setStrategy] = useState('mobile');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -79,12 +80,14 @@ export default function PageSpeedInsights() {
     setResult(null);
 
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(normalizedUrl)}&strategy=${strategy}`,
-        { cache: 'no-store' }
-      );
+      const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(normalizedUrl)}&strategy=${strategy}${apiKey.trim() ? `&key=${encodeURIComponent(apiKey.trim())}` : ''}`;
+      const response = await fetch(endpoint, { cache: 'no-store' });
 
       if (!response.ok) {
+        if (response.status === 429 && !apiKey.trim()) {
+          throw new Error('Google rate-limited this request. Add a free PageSpeed API key to raise the quota.');
+        }
+
         throw new Error(`PageSpeed request failed with HTTP ${response.status}.`);
       }
 
@@ -268,6 +271,29 @@ export default function PageSpeedInsights() {
       </OutputPanel>
 
       <OptionsPanel>
+        <div className="options-label">
+          API Key <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span>
+        </div>
+        <input
+          className="input"
+          type="password"
+          placeholder="Google API key — removes rate limits"
+          value={apiKey}
+          onChange={(event) => setApiKey(event.target.value)}
+          style={{ marginBottom: 6 }}
+        />
+        <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 16, lineHeight: 1.6 }}>
+          Without a key, Google limits requests to roughly 25 per day per IP.{' '}
+          <a
+            href="https://developers.google.com/speed/docs/insights/v5/get-started"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--text-dim)' }}
+          >
+            Get a free key →
+          </a>
+        </div>
+
         <div className="options-label">Strategy</div>
         <div className="mode-toggle" style={{ marginBottom: 20 }}>
           {[
@@ -306,6 +332,7 @@ export default function PageSpeedInsights() {
             style={{ flex: 1, justifyContent: 'center' }}
             onClick={() => {
               setUrl('');
+              setApiKey('');
               setResult(null);
               setError(null);
               setStrategy('mobile');
