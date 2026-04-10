@@ -81,7 +81,7 @@ export default function HomePage() {
       </div>
 
       {/* ── MAIN CONTENT ─────────────────────────────────────────── */}
-      <section className="landing-section" style={{ padding: '0 40px 80px', maxWidth: 1200, margin: '0 auto' }}>
+      <section className="landing-section" style={{ padding: '64px 40px 80px', maxWidth: 1200, margin: '0 auto' }}>
 
         {/* HOW IT WORKS */}
         <ScrollReveal>
